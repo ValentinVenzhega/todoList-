@@ -80,11 +80,11 @@ class Todo {
       this.render();
    }
 
-   editItem(elem) {
-      const a = document.querySelector('.text-todo');
-      a.setAttribute('contenteditable', true);
-      a.focus();
-   }
+   // editItem(elem) {
+   //    const a = document.querySelector('.text-todo');
+   //    a.setAttribute('contenteditable', true);
+   //    a.focus();
+   // }
 
    animate(elem) {
       elem.style.cssText = 'opacity: 0; transition-duration: 0.5s';
@@ -113,7 +113,10 @@ class Todo {
          }
          
          if (target.matches('.todo-edit')) {
-            this.editItem();
+            // this.editItem();
+            const elem = targetParent.querySelector('.text-todo');
+            elem.setAttribute('contenteditable', true);
+            elem.focus();
          }
       });
    }
