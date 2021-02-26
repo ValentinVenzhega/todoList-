@@ -39,6 +39,8 @@ class Todo {
       } else {
          this.todoList.append(li);
       }
+
+      this.input.value = '';
    }
    
    addTodo(e) {
@@ -80,11 +82,14 @@ class Todo {
       this.render();
    }
 
-   // editItem(elem) {
-   //    const a = document.querySelector('.text-todo');
-   //    a.setAttribute('contenteditable', true);
-   //    a.focus();
-   // }
+   editItem(elem) {
+      elem = elem.querySelector('.text-todo');
+      elem.setAttribute('contenteditable', true);
+      elem.focus();
+      elem.onblur = () => {
+         elem.setAttribute('contenteditable', false);
+      };
+   }
 
    animate(elem) {
       elem.style.cssText = 'opacity: 0; transition-duration: 0.5s';
@@ -113,10 +118,8 @@ class Todo {
          }
          
          if (target.matches('.todo-edit')) {
-            // this.editItem();
-            const elem = targetParent.querySelector('.text-todo');
-            elem.setAttribute('contenteditable', true);
-            elem.focus();
+            this.editItem(targetParent);
+            
          }
       });
    }
