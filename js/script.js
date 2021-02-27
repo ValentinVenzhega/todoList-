@@ -7,7 +7,6 @@ class Todo {
       this.todoList = document.querySelector(todoList);
       this.todoCompleted = document.querySelector(todoCompleted);
       this.todoData = new Map(JSON.parse(localStorage.getItem('toDoList')));
-      
    }
 
    addToStorage() {
@@ -21,10 +20,10 @@ class Todo {
       this.addToStorage();
    }
 
-   createItem(todo) {
+   createItem(todo, key) {
       const li = document.createElement('li');
       li.classList.add('todo-item');
-      li.key = todo.key,
+      li.key = key;
       li.insertAdjacentHTML('beforeend', `
          <span class="text-todo">${todo.value}</span>
          <div class="todo-buttons">
@@ -39,19 +38,18 @@ class Todo {
       } else {
          this.todoList.append(li);
       }
-
       this.input.value = '';
+      return key;
    }
    
-   addTodo(e) {
-      e.preventDefault();
+   addTodo(key) {
       if (this.input.value.trim()) {
          const newTodo = {
             value: this.input.value,
             completed: false,
-            key: this.generateKey(),
          };
-         this.todoData.set(newTodo.key, newTodo);
+         this.todoData.set(key, newTodo);
+         this.createItem(this.todoData, key);
          this.render();
       }
    }
@@ -61,17 +59,17 @@ class Todo {
    }
 
    deleteItem(elem) {
-      this.todoData.forEach(item => {
-         if (elem.key === item.key) {
-            this.todoData.delete(item.key);
+      this.todoData.forEach((item, i) => {
+         if (elem.key === i) {
+            this.todoData.delete(i);
          }
       });
       this.render();
    }
 
    completedItem(elem) {
-      this.todoData.forEach(item => {
-         if (elem.key === item.key) {
+      this.todoData.forEach((item, i) => {
+         if (elem.key === i) {
             if (item.completed) {
                item.completed = false;
             } else {
@@ -83,12 +81,19 @@ class Todo {
    }
 
    editItem(elem) {
-      elem = elem.querySelector('.text-todo');
-      elem.setAttribute('contenteditable', true);
-      elem.focus();
-      elem.onblur = () => {
-         elem.setAttribute('contenteditable', false);
-      };
+      const obj = this.todoData.get(elem.key);
+      const textTodo = elem.querySelector('.text-todo');
+      textTodo.contenteditable = true;
+      textTodo.focus();
+      textTodo.addEventListener('blur', () => {
+         textTodo.contenteditable = false;
+         const editTodo = {
+            value: textTodo.textContent,
+            completed: obj.completed,
+         };
+         this.todoData.set(elem.key, editTodo);
+         this.render();
+      });
    }
 
    animate(elem) {
@@ -125,8 +130,12 @@ class Todo {
    }
 
    init() {
-      this.form.addEventListener('submit', this.addTodo.bind(this));
-      this. handler();
+      this.form.addEventListener('submit', (e) => {
+         e.preventDefault();
+         const key = this.input.value.trim() ? this.generateKey() : false;
+         key ? this.addTodo(key) : false;
+      });
+      this.handler();
       this.render();
    }
 }
