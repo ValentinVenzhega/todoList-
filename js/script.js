@@ -102,11 +102,10 @@ class Todo {
 
    handler() {
       const todoContainer = document.querySelector('.todo-container');
-      
+   
       todoContainer.addEventListener('click', (event) => {
          const target = event.target;
          const targetParent = target.parentNode.parentNode;
-         
 
          if (target.matches('.todo-remove')) {
             this.animate(targetParent);
@@ -124,7 +123,6 @@ class Todo {
          
          if (target.matches('.todo-edit')) {
             this.editItem(targetParent);
-            
          }
       });
    }
