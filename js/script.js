@@ -83,7 +83,7 @@ class Todo {
    editItem(elem) {
       const obj = this.todoData.get(elem.key);
       const textTodo = elem.querySelector('.text-todo');
-      textTodo.setAttribute('contenteditable', true);
+      textTodo.contentEditable = true;
       textTodo.focus();
       textTodo.addEventListener('blur', () => {
          textTodo.contenteditable = false;
